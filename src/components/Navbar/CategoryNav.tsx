@@ -9,9 +9,7 @@ interface CategoryNavProps {
   categories: Category[];
 }
 
-export default function CategoryNav({
-  categories,
-}: CategoryNavProps) {
+export default function CategoryNav({ categories }: CategoryNavProps) {
   const pathname = usePathname();
 
   return (
@@ -22,36 +20,23 @@ export default function CategoryNav({
             const href = `/category/${category.slug}`;
 
             const isActive =
-              pathname === href ||
-              pathname.startsWith(`${href}/`);
+              pathname === href || pathname.startsWith(`${href}/`);
 
             return (
               <Link
                 key={category.id}
                 href={href}
-                className={`
-                  flex h-[28px] shrink-0
-                  items-center gap-1.5
-                  rounded-full
-                  px-2.5
-                  text-[10px]
-                  font-medium
-                  transition-all
-                  duration-200
-                  sm:px-3
-                  sm:text-[11px]
-                  ${
-                    isActive
-                      ? "bg-[#e6f5ec] text-[#008f4c]"
-                      : "text-[#555d58] hover:bg-[#f2f5f3] hover:text-[#008f4c]"
-                  }
-                `}
+                className={`btn btn-ghost btn-xs h-[28px] min-h-[28px] shrink-0 rounded-full px-2.5 font-medium normal-case transition-all duration-200 sm:px-3 ${
+                  isActive
+                    ? "bg-[#e6f5ec] text-[#008f4c] hover:bg-[#e6f5ec] hover:text-[#008f4c]"
+                    : "text-[#555d58] hover:bg-[#f2f5f3] hover:text-[#008f4c]"
+                }`}
               >
-                <span className="text-[11px]">
-                  {category.icon}
-                </span>
+                <span className="text-[11px]">{category.icon}</span>
 
-                <span>{category.nameBn}</span>
+                <span className="text-[10px] sm:text-[11px]">
+                  {category.nameBn}
+                </span>
               </Link>
             );
           })}
@@ -60,4 +45,3 @@ export default function CategoryNav({
     </div>
   );
 }
-

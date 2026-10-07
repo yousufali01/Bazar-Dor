@@ -19,13 +19,7 @@ function getUnitName(unit: string) {
   return units[unit.toLowerCase()] || unit;
 }
 
-export default function PriceTicker({
-  products,
-}: PriceTickerProps) {
-  /*
-   * Duplicate the complete product list.
-   * This creates a seamless infinite marquee.
-   */
+export default function PriceTicker({ products }: PriceTickerProps) {
   const tickerProducts = [...products, ...products];
 
   return (
@@ -40,30 +34,26 @@ export default function PriceTicker({
               key={`${product.id}-${index}`}
               className="flex h-[30px] shrink-0 items-center gap-1.5 border-r border-[#e1e6e2] px-4 text-[9px] text-[#505752] sm:px-5 sm:text-[10px]"
             >
-              {/* Product Emoji */}
+              {/* PRODUCT ICON */}
               <span className="text-[11px]">
-                {product.image ||
-                  product.categoryIcon ||
-                  "🛒"}
+                {product.image || product.categoryIcon || "🛒"}
               </span>
 
-              {/* Product Name */}
+              {/* PRODUCT NAME */}
               <span className="whitespace-nowrap font-medium">
                 {product.nameBn}
               </span>
 
-              {/* Price */}
+              {/* PRICE */}
               <span className="whitespace-nowrap">
                 {product.today} টাকা/
                 {getUnitName(product.unit)}
               </span>
 
-              {/* Change */}
+              {/* PRICE CHANGE */}
               <span
-                className={`whitespace-nowrap font-bold ${
-                  isDown
-                    ? "text-[#e74c3c]"
-                    : "text-[#079447]"
+                className={`badge badge-ghost h-auto min-h-0 border-0 bg-transparent p-0 text-[9px] font-bold sm:text-[10px] ${
+                  isDown ? "text-[#e74c3c]" : "text-[#079447]"
                 }`}
               >
                 {isDown ? "▼" : "▲"} {percentage}%
@@ -75,4 +65,3 @@ export default function PriceTicker({
     </div>
   );
 }
-

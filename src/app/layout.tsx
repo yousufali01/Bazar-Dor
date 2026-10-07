@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="bn">
       <body className="bg-[#f5f8f5] text-[#202522]">
-        <Navbar/>
+        <Navbar />
 
         {children}
       </body>

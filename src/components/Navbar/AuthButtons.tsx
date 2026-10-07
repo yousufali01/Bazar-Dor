@@ -24,7 +24,7 @@ export default function AuthButtons() {
       <div className="flex items-center gap-2">
         <Link
           href="/profile"
-          className="flex h-[30px] items-center rounded-full border border-[#dfe6e1] px-3 text-[10px] font-medium text-[#202522] transition-colors hover:border-[#008f4c] hover:text-[#008f4c] sm:h-[32px] sm:px-3.5 sm:text-[11px]"
+          className="btn btn-ghost btn-xs h-[30px] min-h-[30px] rounded-full border border-[#dfe6e1] px-3 text-[10px] font-medium normal-case text-[#202522] hover:border-[#008f4c] hover:bg-transparent hover:text-[#008f4c] sm:h-[32px] sm:min-h-[32px] sm:px-3.5 sm:text-[11px]"
         >
           প্রোফাইল
         </Link>
@@ -32,7 +32,7 @@ export default function AuthButtons() {
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex h-[30px] items-center rounded-full bg-[#008f4c] px-3 text-[10px] font-medium text-white transition-colors hover:bg-[#007d42] sm:h-[32px] sm:px-3.5 sm:text-[11px]"
+          className="btn btn-xs h-[30px] min-h-[30px] rounded-full border-0 bg-[#008f4c] px-3 text-[10px] font-medium normal-case text-white hover:bg-[#007d42] sm:h-[32px] sm:min-h-[32px] sm:px-3.5 sm:text-[11px]"
         >
           সাইন আউট
         </button>
@@ -44,18 +44,17 @@ export default function AuthButtons() {
     <div className="flex items-center gap-2">
       <Link
         href="/login"
-        className="flex h-[30px] items-center rounded-full border border-[#dfe6e1] px-3 text-[10px] font-medium text-[#202522] transition-colors hover:border-[#008f4c] hover:text-[#008f4c] sm:h-[32px] sm:px-3.5 sm:text-[11px]"
+        className="btn btn-ghost btn-xs h-[30px] min-h-[30px] rounded-full border border-[#dfe6e1] px-3 text-[10px] font-medium normal-case text-[#202522] hover:border-[#008f4c] hover:bg-transparent hover:text-[#008f4c] sm:h-[32px] sm:min-h-[32px] sm:px-3.5 sm:text-[11px]"
       >
         সাইন ইন
       </Link>
 
       <Link
         href="/signup"
-        className="flex h-[30px] items-center rounded-full bg-[#008f4c] px-3 text-[10px] font-medium text-white transition-colors hover:bg-[#007d42] sm:h-[32px] sm:px-3.5 sm:text-[11px]"
+        className="btn btn-xs h-[30px] min-h-[30px] rounded-full border-0 bg-[#008f4c] px-3 text-[10px] font-medium normal-case text-white hover:bg-[#007d42] sm:h-[32px] sm:min-h-[32px] sm:px-3.5 sm:text-[11px]"
       >
         সাইন আপ
       </Link>
     </div>
   );
 }
-
