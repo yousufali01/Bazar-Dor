@@ -14,8 +14,8 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
 
   return (
     <div className="border-b border-[#edf1ee] bg-white">
-      <div className="mx-auto max-w-[1120px] px-4 sm:px-6 lg:px-8">
-        <nav className="scrollbar-hide flex h-[38px] items-center justify-center gap-1 overflow-x-auto sm:gap-2">
+      <div className="mx-auto max-w-[90%] px-4 sm:px-6 lg:px-8">
+        <nav className="scrollbar-hide flex h-[40px] items-center justify-start gap-1 overflow-x-auto sm:gap-2">
           {categories.map((category) => {
             const href = `/category/${category.slug}`;
 

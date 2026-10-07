@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="bn">
       <body className="bg-[#f5f8f5] text-[#202522]">
         <Navbar />
-        <Hero/>
         {children}
       </body>
     </html>

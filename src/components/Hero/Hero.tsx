@@ -19,7 +19,7 @@ export default function Hero() {
 
   return (
     <section className="w-full bg-white">
-      <div className="mx-auto max-w-[95%] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <div className="mx-auto max-w-[90%] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
         <div className="hero min-h-[420px] overflow-hidden rounded-[24px] bg-[#eaf7f0]">
           <div className="hero-content w-full flex-col justify-between gap-10 p-6 sm:p-10 lg:flex-row lg:p-14">
             {/* LEFT CONTENT */}
