@@ -223,7 +223,7 @@ export default async function ProductSections() {
       <div
         className="
           mx-auto
-          w-[90%]
+          w-[87%]
           py-8
           sm:py-10
           md:py-12
@@ -238,7 +238,7 @@ export default async function ProductSections() {
             <SectionHeader
               title={
                 <>
-                  <span className="text-[#079447]">▲</span>{" "}
+                  <span className="text-[#e74c3c]">▲</span>{" "}
                   আজ দাম বেড়েছে
                 </>
               }
@@ -256,7 +256,7 @@ export default async function ProductSections() {
             <SectionHeader
               title={
                 <>
-                  <span className="text-[#e74c3c]">▼</span>{" "}
+                  <span className=" text-[#079447]">▼</span>{" "}
                   আজ দাম কমেছে
                 </>
               }
