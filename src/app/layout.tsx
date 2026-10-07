@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Navbar from "../components/Navbar/Navbar";
+import Hero from "@/components/Hero/Hero";
 
 export const metadata: Metadata = {
   title: "বাজার দর",
@@ -18,7 +19,7 @@ export default function RootLayout({
     <html lang="bn">
       <body className="bg-[#f5f8f5] text-[#202522]">
         <Navbar />
-
+        <Hero/>
         {children}
       </body>
     </html>
