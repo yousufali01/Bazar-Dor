@@ -26,6 +26,7 @@ export interface Product {
   categoryIcon: string;
   unit: string;
   image: string;
+  description?: string;
   today: number;
   yesterday: number;
   lastWeek: number;

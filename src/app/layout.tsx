@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {Toaster} from "sonner";
 
 import "./globals.css";
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className="bg-[#f5f8f5] text-[#202522]">
         <Navbar />
         {children}
+        <Toaster />
         <Footer/>
+        
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { getProducts } from "@/lib/api";
 import type { Product } from "@/types";
@@ -30,9 +31,39 @@ function getUnitName(unit: string) {
 }
 
 /* =========================================
-   PRODUCT DETAIL PAGE
+   LOADING UI
    ========================================= */
-export default async function ProductDetailPage({
+function ProductDetailSkeleton() {
+  return (
+    <main className="min-h-screen bg-[#f5f8f5]">
+      <section className="w-full">
+        <div className="mx-auto w-[90%] py-8 sm:py-10 md:py-14">
+          <div className="mb-5 h-4 w-28 animate-pulse rounded bg-[#e5ebe7]" />
+
+          <div className="overflow-hidden rounded-[20px] border border-[#edf1ee] bg-white shadow-sm">
+            <div className="grid md:grid-cols-2">
+              <div className="min-h-[280px] animate-pulse bg-[#f0f4f1] sm:min-h-[350px] md:min-h-[450px]" />
+
+              <div className="space-y-5 p-6 sm:p-8 md:p-10 lg:p-12">
+                <div className="h-3 w-20 animate-pulse rounded bg-[#e5ebe7]" />
+                <div className="h-10 w-3/4 animate-pulse rounded bg-[#e5ebe7]" />
+                <div className="h-3 w-24 animate-pulse rounded bg-[#e5ebe7]" />
+                <div className="mt-8 h-3 w-20 animate-pulse rounded bg-[#e5ebe7]" />
+                <div className="h-10 w-40 animate-pulse rounded bg-[#e5ebe7]" />
+                <div className="mt-8 h-20 w-full animate-pulse rounded bg-[#e5ebe7]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+/* =========================================
+   PRODUCT DETAIL CONTENT
+   ========================================= */
+async function ProductDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -174,5 +205,20 @@ export default async function ProductDetailPage({
         </div>
       </section>
     </main>
+  );
+}
+
+/* =========================================
+   PRODUCT DETAIL PAGE
+   ========================================= */
+export default function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense fallback={<ProductDetailSkeleton />}>
+      <ProductDetailContent params={params} />
+    </Suspense>
   );
 }
