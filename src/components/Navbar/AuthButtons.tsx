@@ -45,6 +45,9 @@ export default function AuthButtons() {
 
       setShowProfile(false);
       setShowEdit(false);
+
+      // Logout এর পর Home page এ নিয়ে যাবে
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       toast.error("Logout করতে সমস্যা হয়েছে।");

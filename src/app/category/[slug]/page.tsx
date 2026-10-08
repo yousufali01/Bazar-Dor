@@ -164,13 +164,21 @@ export default function CategoryPage({
         return result.sort((a, b) => b.today - a.today);
 
       case "name":
-        return result.sort((a, b) => a.nameBn.localeCompare(b.nameBn, "bn"));
+        return result.sort((a, b) =>
+          a.nameBn.localeCompare(b.nameBn, "bn"),
+        );
 
       case "change-high":
-        return result.sort((a, b) => b.change.pct - a.change.pct);
+        return result.sort(
+          (a, b) =>
+            Math.abs(b.change.pct) - Math.abs(a.change.pct),
+        );
 
       case "change-low":
-        return result.sort((a, b) => a.change.pct - b.change.pct);
+        return result.sort(
+          (a, b) =>
+            Math.abs(a.change.pct) - Math.abs(b.change.pct),
+        );
 
       default:
         return result;
@@ -309,8 +317,6 @@ export default function CategoryPage({
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl">{categoryIcon}</span>
-
                 <h1 className="text-2xl font-bold tracking-tight text-[#202522] sm:text-3xl">
                   {categoryName}
                 </h1>
@@ -403,6 +409,7 @@ export default function CategoryPage({
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
             {sortedProducts.map((product) => {
               const isUp = product.change.dir === "up";
+              const isDown = product.change.dir === "down";
 
               const imageUrl = getImageUrl(product.image);
 
@@ -473,10 +480,13 @@ export default function CategoryPage({
                         className={`rounded-full px-2 py-1 text-[10px] font-semibold sm:text-xs ${
                           isUp
                             ? "bg-[#ffe8e8] text-[#e74c3c]"
-                            : "bg-[#e6f5ec] text-[#008f4c]"
+                            : isDown
+                              ? "bg-[#e6f5ec] text-[#008f4c]"
+                              : "bg-[#f1f3f2] text-[#737a76]"
                         }`}
                       >
-                        {isUp ? "▲" : "▼"} {toBanglaNumber(product.change.pct)}%
+                        {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
+                        {toBanglaNumber(Math.abs(product.change.pct))}%
                       </span>
                     </div>
                   </div>
@@ -489,3 +499,4 @@ export default function CategoryPage({
     </main>
   );
 }
+

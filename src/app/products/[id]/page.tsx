@@ -108,7 +108,7 @@ async function ProductDetailContent({
   });
 
   if (!session) {
-    redirect("/signin");
+    redirect("/signup");
   }
 
   /* =========================================
