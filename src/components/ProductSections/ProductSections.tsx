@@ -8,10 +8,7 @@ import type { Product } from "@/types";
    BANGLA NUMBER
    ========================================= */
 function toBanglaNumber(value: number | string) {
-  return String(value).replace(
-    /\d/g,
-    (digit) => "০১২৩৪৫৬৭৮৯"[Number(digit)]
-  );
+  return String(value).replace(/\d/g, (digit) => "০১২৩৪৫৬৭৮৯"[Number(digit)]);
 }
 
 /* =========================================
@@ -75,9 +72,7 @@ function ProductCard({ product }: { product: Product }) {
 
   const changeText = isFlat
     ? `—${toBanglaNumber(Math.abs(product.change.pct))}%`
-    : `${isUp ? "▲" : "▼"} ${toBanglaNumber(
-        Math.abs(product.change.pct)
-      )}%`;
+    : `${isUp ? "▲" : "▼"} ${toBanglaNumber(Math.abs(product.change.pct))}%`;
 
   return (
     <Link
@@ -125,9 +120,9 @@ function ProductCard({ product }: { product: Product }) {
           <span
             className={`badge h-auto min-h-0 shrink-0 rounded-full border-0 px-1.5 py-1 text-[8px] font-bold sm:px-2 sm:text-[9px] md:text-[10px] ${
               isUp
-                ? "bg-[#e8f7ee] text-[#079447]"
+                ? "bg-[#fff0ee] text-[#e74c3c]"
                 : isDown
-                  ? "bg-[#fff0ee] text-[#e74c3c]"
+                  ? "bg-[#e8f7ee] text-[#079447]"
                   : "bg-[#f1f3f2] text-[#737a76]"
             }`}
           >
@@ -198,10 +193,7 @@ export default async function ProductSections() {
      ===================================== */
   const risers = [...products]
     .filter((product) => product.change.dir === "up")
-    .sort(
-      (a, b) =>
-        Math.abs(b.change.pct) - Math.abs(a.change.pct)
-    )
+    .sort((a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct))
     .slice(0, 6);
 
   /* =====================================
@@ -209,10 +201,7 @@ export default async function ProductSections() {
      ===================================== */
   const fallers = [...products]
     .filter((product) => product.change.dir === "down")
-    .sort(
-      (a, b) =>
-        Math.abs(b.change.pct) - Math.abs(a.change.pct)
-    )
+    .sort((a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct))
     .slice(0, 6);
 
   return (
@@ -238,8 +227,7 @@ export default async function ProductSections() {
             <SectionHeader
               title={
                 <>
-                  <span className="text-[#e74c3c]">▲</span>{" "}
-                  আজ দাম বেড়েছে
+                  <span className="text-[#e74c3c]">▲</span> আজ দাম বেড়েছে
                 </>
               }
             />
@@ -256,8 +244,7 @@ export default async function ProductSections() {
             <SectionHeader
               title={
                 <>
-                  <span className=" text-[#079447]">▼</span>{" "}
-                  আজ দাম কমেছে
+                  <span className=" text-[#079447]">▼</span> আজ দাম কমেছে
                 </>
               }
             />
@@ -269,10 +256,7 @@ export default async function ProductSections() {
         {/* =====================================
             SECTION C — ALL PRODUCTS
             ===================================== */}
-        <div
-          id="সব-পণ্য"
-          className="scroll-mt-[120px] sm:scroll-mt-[140px]"
-        >
+        <div id="সব-পণ্য" className="scroll-mt-[120px] sm:scroll-mt-[140px]">
           <SectionHeader
             title="সব পণ্য"
             subtitle="সকল পণ্যের সর্বশেষ আপডেটেড বাজার মূল্য একসাথে দেখুন"
@@ -284,4 +268,3 @@ export default async function ProductSections() {
     </section>
   );
 }
-
