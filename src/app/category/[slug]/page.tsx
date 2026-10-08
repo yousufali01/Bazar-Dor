@@ -164,9 +164,7 @@ export default function CategoryPage({
         return result.sort((a, b) => b.today - a.today);
 
       case "name":
-        return result.sort((a, b) =>
-          a.nameBn.localeCompare(b.nameBn, "bn"),
-        );
+        return result.sort((a, b) => a.nameBn.localeCompare(b.nameBn, "bn"));
 
       case "change-high":
         return result.sort((a, b) => b.change.pct - a.change.pct);
@@ -194,9 +192,7 @@ export default function CategoryPage({
      ========================================= */
 
   const categoryImage =
-    categoryProducts.length > 0
-      ? getImageUrl(categoryProducts[0].image)
-      : "";
+    categoryProducts.length > 0 ? getImageUrl(categoryProducts[0].image) : "";
 
   /* =========================================
      LOADING
@@ -206,7 +202,6 @@ export default function CategoryPage({
     return (
       <main className="min-h-screen bg-[#f7faf8]">
         <div className="mx-auto max-w-[1120px] px-4 py-8 sm:px-6 lg:px-8">
-
           <div className="mb-7 rounded-2xl border border-[#edf1ee] bg-white p-4 shadow-sm sm:p-5">
             <div className="flex items-center gap-4">
               <div className="h-24 w-24 animate-pulse rounded-2xl bg-[#e6ece8]" />
@@ -252,9 +247,7 @@ export default function CategoryPage({
           <div className="rounded-2xl border border-[#edf1ee] bg-white px-6 py-12 shadow-sm">
             <div className="text-4xl">⚠️</div>
 
-            <h1 className="mt-4 text-lg font-bold text-[#202522]">
-              {error}
-            </h1>
+            <h1 className="mt-4 text-lg font-bold text-[#202522]">{error}</h1>
 
             <button
               onClick={() => window.location.reload()}
@@ -275,14 +268,12 @@ export default function CategoryPage({
   return (
     <main className="min-h-screen bg-[#f7faf8]">
       <div className="mx-auto max-w-[1120px] px-4 py-8 sm:px-6 lg:px-8">
-
         {/* =========================================
             CATEGORY HEADER
             ========================================= */}
 
         <div className="mb-5 rounded-2xl border border-[#edf1ee] bg-white p-4 shadow-sm sm:p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-
             {/* CATEGORY IMAGE */}
 
             <div className="flex h-[100px] w-[100px] shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#f7faf8] sm:h-[120px] sm:w-[120px]">
@@ -318,9 +309,7 @@ export default function CategoryPage({
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl">
-                  {categoryIcon}
-                </span>
+                <span className="text-xl sm:text-2xl">{categoryIcon}</span>
 
                 <h1 className="text-2xl font-bold tracking-tight text-[#202522] sm:text-3xl">
                   {categoryName}
@@ -344,7 +333,6 @@ export default function CategoryPage({
 
         {categoryProducts.length > 0 && (
           <div className="mb-5 flex flex-col gap-3 rounded-xl border border-[#edf1ee] bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-
             {/* PRODUCT COUNT */}
 
             <p className="text-sm font-medium text-[#555d58]">
@@ -352,7 +340,7 @@ export default function CategoryPage({
               <span className="font-bold text-[#202522]">
                 {toBanglaNumber(sortedProducts.length)}
               </span>{" "}
-               পন্য দেখানো হচ্ছে
+              পন্য দেখানো হচ্ছে
             </p>
 
             {/* SORT */}
@@ -373,25 +361,15 @@ export default function CategoryPage({
               >
                 <option value="default">ডিফল্ট</option>
 
-                <option value="price-low">
-                  দাম: কম থেকে বেশি
-                </option>
+                <option value="price-low">দাম: কম থেকে বেশি</option>
 
-                <option value="price-high">
-                  দাম: বেশি থেকে কম
-                </option>
+                <option value="price-high">দাম: বেশি থেকে কম</option>
 
-                <option value="name">
-                  নাম অনুযায়ী
-                </option>
+                <option value="name">নাম অনুযায়ী</option>
 
-                <option value="change-high">
-                  দাম বৃদ্ধি অনুযায়ী
-                </option>
+                <option value="change-high">দাম বৃদ্ধি অনুযায়ী</option>
 
-                <option value="change-low">
-                  দাম হ্রাস অনুযায়ী
-                </option>
+                <option value="change-low">দাম হ্রাস অনুযায়ী</option>
               </select>
             </div>
           </div>
@@ -414,7 +392,7 @@ export default function CategoryPage({
             </p>
 
             <Link href="/" className="btn btn-primary mt-5 rounded-full">
-              সব পণ্য দেখুন
+              হোম পেজে ফিরে যান
             </Link>
           </div>
         ) : (
@@ -482,9 +460,7 @@ export default function CategoryPage({
 
                     <div className="mt-3 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-[10px] text-[#737a76]">
-                          আজকের দাম
-                        </p>
+                        <p className="text-[10px] text-[#737a76]">আজকের দাম</p>
 
                         <p className="mt-0.5 text-base font-bold text-[#202522] sm:text-lg">
                           ৳{toBanglaNumber(product.today)}
@@ -500,8 +476,7 @@ export default function CategoryPage({
                             : "bg-[#e6f5ec] text-[#008f4c]"
                         }`}
                       >
-                        {isUp ? "▲" : "▼"}{" "}
-                        {toBanglaNumber(product.change.pct)}%
+                        {isUp ? "▲" : "▼"} {toBanglaNumber(product.change.pct)}%
                       </span>
                     </div>
                   </div>
