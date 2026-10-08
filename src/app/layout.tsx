@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className="bg-[#f5f8f5] text-[#202522]">
         <Navbar />
         {children}
-        <Toaster />
+        <Toaster position="top-center" richColors />
         <Footer/>
         
       </body>

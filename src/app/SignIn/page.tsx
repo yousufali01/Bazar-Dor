@@ -12,16 +12,26 @@ export default function SignInPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [socialLoading, setSocialLoading] = useState<
     "google" | "github" | null
   >(null);
 
+  // =========================
+  // EMAIL / PASSWORD LOGIN
+  // =========================
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!email.trim() || !password) {
-      toast.error("Email এবং Password দিন।");
+    if (!email.trim()) {
+      toast.error("Email দিন।");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Password দিন।");
       return;
     }
 
@@ -29,12 +39,15 @@ export default function SignInPage() {
 
     try {
       const { error } = await authClient.signIn.email({
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password,
       });
 
       if (error) {
+        console.error("SIGNIN ERROR:", error);
+
         toast.error(error.message || "Email অথবা Password ভুল হয়েছে।");
+
         return;
       }
 
@@ -42,13 +55,18 @@ export default function SignInPage() {
 
       router.push("/");
       router.refresh();
-    } catch {
+    } catch (error) {
+      console.error("SIGNIN ERROR:", error);
+
       toast.error("সাইন ইন করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
   }
 
+  // =========================
+  // GOOGLE / GITHUB LOGIN
+  // =========================
   async function handleSocialLogin(provider: "google" | "github") {
     setSocialLoading(provider);
 
@@ -57,8 +75,15 @@ export default function SignInPage() {
         provider,
         callbackURL: "/",
       });
-    } catch {
-      toast.error(`${provider} দিয়ে সাইন ইন করতে সমস্যা হয়েছে।`);
+    } catch (error) {
+      console.error(error);
+
+      if (provider === "google") {
+        toast.error("Google দিয়ে সাইন ইন করতে সমস্যা হয়েছে।");
+      } else {
+        toast.error("GitHub দিয়ে সাইন ইন করতে সমস্যা হয়েছে।");
+      }
+
       setSocialLoading(null);
     }
   }
@@ -76,9 +101,7 @@ export default function SignInPage() {
             </div>
 
             <div className="mt-10">
-              <p className="text-sm font-medium text-white/80">
-                স্বাগতম আবার!
-              </p>
+              <p className="text-sm font-medium text-white/80">স্বাগতম আবার!</p>
 
               <h2 className="mt-3 text-4xl font-bold leading-tight">
                 প্রতিদিনের বাজারের
@@ -87,15 +110,13 @@ export default function SignInPage() {
               </h2>
 
               <p className="mt-5 max-w-sm text-sm leading-6 text-white/75">
-                আপনার অ্যাকাউন্টে সাইন ইন করে সহজেই পণ্যের বর্তমান দাম ও
-                বাজারের তথ্য দেখুন।
+                আপনার অ্যাকাউন্টে সাইন ইন করে সহজেই পণ্যের বর্তমান দাম ও বাজারের
+                তথ্য দেখুন।
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-white/60">
-            © ২০২৬ বাজার দর
-          </p>
+          <p className="text-xs text-white/60">© ২০২৬ বাজার দর</p>
         </div>
 
         {/* RIGHT SIDE */}
@@ -104,16 +125,12 @@ export default function SignInPage() {
           <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
             <span className="text-2xl">🛒</span>
 
-            <span className="text-xl font-bold text-[#202522]">
-              বাজার দর
-            </span>
+            <span className="text-xl font-bold text-[#202522]">বাজার দর</span>
           </div>
 
           {/* HEADER */}
           <div>
-            <p className="text-xs font-semibold text-[#008f4c]">
-              ACCOUNT
-            </p>
+            <p className="text-xs font-semibold text-[#008f4c]">ACCOUNT</p>
 
             <h1 className="mt-2 text-[28px] font-bold tracking-[-0.5px] text-[#202522]">
               সাইন ইন করুন
@@ -142,7 +159,7 @@ export default function SignInPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="আপনার email লিখুন"
                 autoComplete="email"
-                disabled={loading}
+                disabled={loading || socialLoading !== null}
                 className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
               />
             </div>
@@ -156,27 +173,40 @@ export default function SignInPage() {
                 Password
               </label>
 
-              <input
-                id="signin-password"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="আপনার password লিখুন"
-                autoComplete="current-password"
-                disabled={loading}
-                className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
-              />
+              <div className="relative">
+                <input
+                  id="signin-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="আপনার password লিখুন"
+                  autoComplete="current-password"
+                  disabled={loading || socialLoading !== null}
+                  className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 pr-12 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading || socialLoading !== null}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737a76] transition hover:text-[#008f4c] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             {/* LOGIN BUTTON */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || socialLoading !== null}
               className="flex h-12 w-full items-center justify-center rounded-xl bg-[#008f4c] text-sm font-bold text-white transition hover:bg-[#007d42] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
                   <span className="loading loading-spinner loading-sm" />
+
                   <span className="ml-2">সাইন ইন হচ্ছে...</span>
                 </>
               ) : (
@@ -207,7 +237,9 @@ export default function SignInPage() {
               <span className="text-lg font-bold">G</span>
             )}
 
-            Google দিয়ে সাইন ইন
+            {socialLoading === "google"
+              ? "Google দিয়ে সাইন ইন হচ্ছে..."
+              : "Google দিয়ে সাইন ইন"}
           </button>
 
           {/* GITHUB */}
@@ -223,14 +255,16 @@ export default function SignInPage() {
               <span className="text-lg">●</span>
             )}
 
-            GitHub দিয়ে সাইন ইন
+            {socialLoading === "github"
+              ? "GitHub দিয়ে সাইন ইন হচ্ছে..."
+              : "GitHub দিয়ে সাইন ইন"}
           </button>
 
           {/* SIGN UP */}
           <p className="mt-7 text-center text-sm text-[#737a76]">
             নতুন ব্যবহারকারী?{" "}
             <Link
-              href="/SignUp"
+              href="/signup"
               className="font-bold text-[#008f4c] hover:underline"
             >
               সাইন আপ করুন

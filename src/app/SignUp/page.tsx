@@ -13,6 +13,7 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -23,8 +24,18 @@ export default function SignUpPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!name.trim() || !email.trim() || !password) {
-      toast.error("সবগুলো field পূরণ করুন।");
+    if (!name.trim()) {
+      toast.error("নাম দিন।");
+      return;
+    }
+
+    if (!email.trim()) {
+      toast.error("Email দিন।");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Password দিন।");
       return;
     }
 
@@ -38,19 +49,26 @@ export default function SignUpPage() {
     try {
       const { error } = await authClient.signUp.email({
         name: name.trim(),
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password,
       });
 
       if (error) {
-        toast.error(error.message || "Registration failed.");
+        console.error("SIGNUP ERROR:", error);
+
+        toast.error(
+          error.message || "Account তৈরি করা যায়নি। আবার চেষ্টা করুন।",
+        );
+
         return;
       }
 
       toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
 
-      router.push("/SignIn");
-    } catch {
+      router.push("/signin");
+    } catch (error) {
+      console.error("SIGNUP ERROR:", error);
+
       toast.error("সাইন আপ করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
@@ -95,15 +113,13 @@ export default function SignUpPage() {
               </h2>
 
               <p className="mt-5 max-w-sm text-sm leading-6 text-white/75">
-                একটি অ্যাকাউন্ট তৈরি করে প্রতিদিনের প্রয়োজনীয় পণ্যের দাম
-                সহজেই দেখুন।
+                একটি অ্যাকাউন্ট তৈরি করে প্রতিদিনের প্রয়োজনীয় পণ্যের দাম সহজেই
+                দেখুন।
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-white/60">
-            © ২০২৬ বাজার দর
-          </p>
+          <p className="text-xs text-white/60">© ২০২৬ বাজার দর</p>
         </div>
 
         {/* RIGHT SIDE */}
@@ -112,9 +128,7 @@ export default function SignUpPage() {
           <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
             <span className="text-2xl">🛒</span>
 
-            <span className="text-xl font-bold text-[#202522]">
-              বাজার দর
-            </span>
+            <span className="text-xl font-bold text-[#202522]">বাজার দর</span>
           </div>
 
           {/* HEADER */}
@@ -185,16 +199,28 @@ export default function SignUpPage() {
                 Password
               </label>
 
-              <input
-                id="signup-password"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="কমপক্ষে ৮ অক্ষর"
-                autoComplete="new-password"
-                disabled={loading}
-                className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
-              />
+              <div className="relative">
+                <input
+                  id="signup-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="কমপক্ষে ৮ অক্ষর"
+                  autoComplete="new-password"
+                  disabled={loading}
+                  className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 pr-12 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737a76] transition hover:text-[#008f4c] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
 
             {/* REGISTER BUTTON */}
@@ -235,7 +261,6 @@ export default function SignUpPage() {
             ) : (
               <span className="text-lg font-bold">G</span>
             )}
-
             Google দিয়ে সাইন আপ
           </button>
 
@@ -251,7 +276,6 @@ export default function SignUpPage() {
             ) : (
               <span className="text-lg">●</span>
             )}
-
             GitHub দিয়ে সাইন আপ
           </button>
 
@@ -259,7 +283,7 @@ export default function SignUpPage() {
           <p className="mt-7 text-center text-sm text-[#737a76]">
             ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
             <Link
-              href="/SignIn"
+              href="/signin"
               className="font-bold text-[#008f4c] hover:underline"
             >
               সাইন ইন করুন
