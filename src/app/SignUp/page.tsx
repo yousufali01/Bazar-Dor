@@ -1,9 +1,10 @@
 "use client";
-
+import {useEffect} from "react";
+import{useSearchParams} from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -63,7 +64,7 @@ export default function SignUpPage() {
         return;
       }
 
-      toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
+      toast.success("Account সফলভাবে তৈরি হয়েছে!");
 
       router.push("/signin");
     } catch (error) {

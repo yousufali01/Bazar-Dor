@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 
 import { getProducts } from "@/lib/api";
 import { auth } from "@/lib/auth";
-
 /* =========================================
    BANGLA NUMBER
    ========================================= */
@@ -108,7 +107,7 @@ async function ProductDetailContent({
   });
 
   if (!session) {
-    redirect("/signup");
+    redirect("/signup?redirected=protected");
   }
 
   /* =========================================
@@ -117,6 +116,9 @@ async function ProductDetailContent({
   const products = await getProducts();
 
   const product = products.find((item) => String(item.id) === String(id));
+  if (!product) {
+    notFound();
+  }
 
   /* =========================================
      PRODUCT NOT FOUND

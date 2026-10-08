@@ -1,5 +1,5 @@
 "use client";
-
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -9,6 +9,7 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://api.api-store.workers.dev/api/bazardor";
 
+  
 /* =========================================
    BANGLA NUMBER
    ========================================= */
@@ -274,6 +275,7 @@ export default function CategoryPage({
      ========================================= */
 
   return (
+    
     <main className="min-h-screen bg-[#f7faf8]">
       <div className="mx-auto max-w-[1120px] px-4 py-8 sm:px-6 lg:px-8">
         {/* =========================================

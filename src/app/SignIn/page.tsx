@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -51,14 +51,14 @@ export default function SignInPage() {
         return;
       }
 
-      toast.success("সফলভাবে সাইন ইন হয়েছে!");
+      toast.success("সফলভাবে Sign In হয়েছে!");
 
       router.push("/");
       router.refresh();
     } catch (error) {
       console.error("SIGNIN ERROR:", error);
 
-      toast.error("সাইন ইন করতে সমস্যা হয়েছে।");
+      toast.error("Sign In করতে সমস্যা হয়েছে।");
     } finally {
       setLoading(false);
     }
