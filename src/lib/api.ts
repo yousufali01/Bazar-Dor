@@ -1,8 +1,9 @@
 import type { Category, Product } from "@/types";
 
-const API_BASE_URL =
+const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://api.api-store.workers.dev/api/bazardor";
+  "https://api.api-store.workers.dev/api/bazardor"
+).replace(/\/+$/, "");
 
 async function fetchList<T>(endpoint: string): Promise<T[]> {
   try {
@@ -13,11 +14,10 @@ async function fetchList<T>(endpoint: string): Promise<T[]> {
     if (!response.ok) {
       const errorBody = await response.text().catch(() => "");
 
-      console.error(
-        `[API Error] ${endpoint} | Status: ${response.status} | Message: ${
-          errorBody || "No response body"
-        }`,
-      );
+      console.error(`[API Error] ${endpoint}`, {
+        status: response.status,
+        message: errorBody || "No response body",
+      });
 
       return [];
     }
@@ -25,7 +25,11 @@ async function fetchList<T>(endpoint: string): Promise<T[]> {
     const data: unknown = await response.json();
 
     if (!Array.isArray(data)) {
-      console.error(`[API Error] ${endpoint}: Expected an array response`);
+      console.error(
+        `[API Error] ${endpoint}: Expected an array response`,
+        data,
+      );
+
       return [];
     }
 
