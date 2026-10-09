@@ -2,28 +2,44 @@ import type { Category, Product } from "@/types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://api.abcz.workers.dev/api/bazardor";
+  "https://api.api-store.workers.dev/api/bazardor";
+
+async function fetchList<T>(endpoint: string): Promise<T[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+      cache: "force-cache",
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+
+      console.error(
+        `[API Error] ${endpoint} | Status: ${response.status} | Message: ${
+          errorBody || "No response body"
+        }`,
+      );
+
+      return [];
+    }
+
+    const data: unknown = await response.json();
+
+    if (!Array.isArray(data)) {
+      console.error(`[API Error] ${endpoint}: Expected an array response`);
+      return [];
+    }
+
+    return data as T[];
+  } catch (error) {
+    console.error(`[API Request Failed] ${endpoint}:`, error);
+    return [];
+  }
+}
 
 export async function getCategories(): Promise<Category[]> {
-  const response = await fetch(`${API_BASE_URL}/categories`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`Categories API failed: ${response.status}`);
-  }
-
-  return response.json();
+  return fetchList<Category>("categories");
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const response = await fetch(`${API_BASE_URL}/products`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`Products API failed: ${response.status}`);
-  }
-
-  return response.json();
+  return fetchList<Product>("products");
 }
