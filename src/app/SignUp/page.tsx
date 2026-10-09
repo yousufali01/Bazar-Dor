@@ -1,10 +1,9 @@
 "use client";
-import {useEffect} from "react";
-import{useSearchParams} from "next/navigation";
+
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
-import toast from "react-hot-toast";
-import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -15,12 +14,25 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [socialLoading, setSocialLoading] = useState<
     "google" | "github" | null
   >(null);
+
+ // Protected page থেকে redirect হলে notification
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("redirected") === "protected") {
+      // URL থেকে flag সরিয়ে দিচ্ছি
+      window.history.replaceState({}, "", "/signup");
+
+      //একই toast একবারই দেখাবে
+      toast.error("এই পেজ দেখতে আগে একটি account তৈরি করুন।", {
+        id: "protected-page-toast",
+      });
+    }
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,8 +42,18 @@ export default function SignUpPage() {
       return;
     }
 
+    if (name.trim().length < 2) {
+      toast.error("নাম কমপক্ষে ২ অক্ষরের হতে হবে।");
+      return;
+    }
+
     if (!email.trim()) {
       toast.error("Email দিন।");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      toast.error("সঠিক Email address দিন।");
       return;
     }
 
@@ -56,21 +78,19 @@ export default function SignUpPage() {
 
       if (error) {
         console.error("SIGNUP ERROR:", error);
-
         toast.error(
           error.message || "Account তৈরি করা যায়নি। আবার চেষ্টা করুন।",
         );
-
         return;
       }
 
       toast.success("Account সফলভাবে তৈরি হয়েছে!");
 
       router.push("/signin");
+      router.refresh();
     } catch (error) {
       console.error("SIGNUP ERROR:", error);
-
-      toast.error("সাইন আপ করতে সমস্যা হয়েছে।");
+      toast.error("সাইন আপ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
@@ -80,15 +100,34 @@ export default function SignUpPage() {
     setSocialLoading(provider);
 
     try {
-      await authClient.signIn.social({
+      const { error } = await authClient.signIn.social({
         provider,
         callbackURL: "/",
       });
-    } catch {
-      toast.error(`${provider} দিয়ে সাইন আপ করতে সমস্যা হয়েছে।`);
+
+      if (error) {
+        console.error(`${provider.toUpperCase()} SIGNUP ERROR:`, error);
+        toast.error(
+          provider === "google"
+            ? "Google দিয়ে সাইন আপ করতে সমস্যা হয়েছে।"
+            : "GitHub দিয়ে সাইন আপ করতে সমস্যা হয়েছে।",
+        );
+        setSocialLoading(null);
+      }
+    } catch (error) {
+      console.error("SOCIAL SIGNUP ERROR:", error);
+
+      toast.error(
+        provider === "google"
+          ? "Google দিয়ে সাইন আপ করতে সমস্যা হয়েছে।"
+          : "GitHub দিয়ে সাইন আপ করতে সমস্যা হয়েছে।",
+      );
+
       setSocialLoading(null);
     }
   }
+
+  const isBusy = loading || socialLoading !== null;
 
   return (
     <main className="min-h-screen bg-[#f5f8f5] px-4 py-10 sm:py-14">
@@ -98,7 +137,6 @@ export default function SignUpPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-3xl">🛒</span>
-
               <span className="text-xl font-bold">বাজার দর</span>
             </div>
 
@@ -128,7 +166,6 @@ export default function SignUpPage() {
           {/* MOBILE LOGO */}
           <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
             <span className="text-2xl">🛒</span>
-
             <span className="text-xl font-bold text-[#202522]">বাজার দর</span>
           </div>
 
@@ -165,7 +202,8 @@ export default function SignUpPage() {
                 onChange={(event) => setName(event.target.value)}
                 placeholder="আপনার নাম লিখুন"
                 autoComplete="name"
-                disabled={loading}
+                required
+                disabled={isBusy}
                 className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
               />
             </div>
@@ -186,7 +224,8 @@ export default function SignUpPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="আপনার email লিখুন"
                 autoComplete="email"
-                disabled={loading}
+                required
+                disabled={isBusy}
                 className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
               />
             </div>
@@ -208,14 +247,16 @@ export default function SignUpPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="কমপক্ষে ৮ অক্ষর"
                   autoComplete="new-password"
-                  disabled={loading}
+                  minLength={8}
+                  required
+                  disabled={isBusy}
                   className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 pr-12 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  disabled={loading}
+                  disabled={isBusy}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[#737a76] transition hover:text-[#008f4c] disabled:cursor-not-allowed disabled:opacity-50"
                 >
@@ -227,7 +268,7 @@ export default function SignUpPage() {
             {/* REGISTER BUTTON */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={isBusy}
               className="flex h-12 w-full items-center justify-center rounded-xl bg-[#008f4c] text-sm font-bold text-white transition hover:bg-[#007d42] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
@@ -244,9 +285,7 @@ export default function SignUpPage() {
           {/* DIVIDER */}
           <div className="my-7 flex items-center gap-3">
             <div className="h-px flex-1 bg-[#e8edea]" />
-
             <span className="text-xs text-[#9aa19d]">অথবা</span>
-
             <div className="h-px flex-1 bg-[#e8edea]" />
           </div>
 
@@ -254,7 +293,7 @@ export default function SignUpPage() {
           <button
             type="button"
             onClick={() => handleSocialSignup("google")}
-            disabled={socialLoading !== null || loading}
+            disabled={isBusy}
             className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-[#dfe7e2] bg-white text-sm font-semibold text-[#202522] transition hover:bg-[#f7faf8] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {socialLoading === "google" ? (
@@ -262,14 +301,17 @@ export default function SignUpPage() {
             ) : (
               <span className="text-lg font-bold">G</span>
             )}
-            Google দিয়ে সাইন আপ
+
+            {socialLoading === "google"
+              ? "Google দিয়ে সাইন আপ হচ্ছে..."
+              : "Google দিয়ে সাইন আপ"}
           </button>
 
           {/* GITHUB */}
           <button
             type="button"
             onClick={() => handleSocialSignup("github")}
-            disabled={socialLoading !== null || loading}
+            disabled={isBusy}
             className="mt-3 flex h-12 w-full items-center justify-center gap-3 rounded-xl bg-[#202522] text-sm font-semibold text-white transition hover:bg-[#111411] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {socialLoading === "github" ? (
@@ -277,7 +319,10 @@ export default function SignUpPage() {
             ) : (
               <span className="text-lg">●</span>
             )}
-            GitHub দিয়ে সাইন আপ
+
+            {socialLoading === "github"
+              ? "GitHub দিয়ে সাইন আপ হচ্ছে..."
+              : "GitHub দিয়ে সাইন আপ"}
           </button>
 
           {/* SIGN IN */}
@@ -290,6 +335,16 @@ export default function SignUpPage() {
               সাইন ইন করুন
             </Link>
           </p>
+
+          {/* HOME PAGE LINK */}
+          <div className="mt-5 border-t border-[#e8edea] pt-5 text-center">
+            <Link
+              href="/"
+              className="text-sm font-semibold text-[#008f4c] transition hover:underline"
+            >
+              ← হোম পেজে ফিরে যান
+            </Link>
+          </div>
         </div>
       </div>
     </main>

@@ -20,8 +20,8 @@ function NavbarShell() {
           {/* LOGO */}
           <div className="navbar-start">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[9px] bg-[#008f4c] shadow-sm">
-                <span className="text-[20px]">🛒</span>
+              <div className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-[9px] bg-[#008f4c] shadow-sm">
+                <span className="text-[25px]">🛒</span>
              </div>
 
               <div>

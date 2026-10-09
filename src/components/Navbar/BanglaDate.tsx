@@ -18,5 +18,10 @@ export default function BanglaDate() {
     setToday(getBanglaDate());
   }, []);
 
-  return <>{today}</>;
+ return (
+  <span className="text-[12px] font-medium leading-relaxed text-gray-600">
+    {today}
+  </span>
+);
 }
+

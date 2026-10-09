@@ -19,14 +19,17 @@ export default function SignInPage() {
     "google" | "github" | null
   >(null);
 
-  // =========================
   // EMAIL / PASSWORD LOGIN
-  // =========================
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!email.trim()) {
       toast.error("Email দিন।");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      toast.error("সঠিক Email address দিন।");
       return;
     }
 
@@ -45,44 +48,51 @@ export default function SignInPage() {
 
       if (error) {
         console.error("SIGNIN ERROR:", error);
-
-        toast.error(error.message || "Email অথবা Password ভুল হয়েছে।");
-
+        toast.error("Sign In ব্যর্থ হয়েছে। Email ও Password যাচাই করুন।");
         return;
       }
 
       toast.success("সফলভাবে Sign In হয়েছে!");
 
-      router.push("/");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       console.error("SIGNIN ERROR:", error);
-
-      toast.error("Sign In করতে সমস্যা হয়েছে।");
+      toast.error("Sign In করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
   }
 
-  // =========================
   // GOOGLE / GITHUB LOGIN
-  // =========================
   async function handleSocialLogin(provider: "google" | "github") {
     setSocialLoading(provider);
 
     try {
-      await authClient.signIn.social({
+      const { error } = await authClient.signIn.social({
         provider,
         callbackURL: "/",
       });
-    } catch (error) {
-      console.error(error);
 
-      if (provider === "google") {
-        toast.error("Google দিয়ে সাইন ইন করতে সমস্যা হয়েছে।");
-      } else {
-        toast.error("GitHub দিয়ে সাইন ইন করতে সমস্যা হয়েছে।");
+      if (error) {
+        console.error(`${provider.toUpperCase()} SIGNIN ERROR:`, error);
+
+        toast.error(
+          provider === "google"
+            ? "Google দিয়ে Sign In করা যায়নি।"
+            : "GitHub দিয়ে Sign In করা যায়নি।",
+        );
+
+        setSocialLoading(null);
       }
+    } catch (error) {
+      console.error("SOCIAL SIGNIN ERROR:", error);
+
+      toast.error(
+        provider === "google"
+          ? "Google দিয়ে সাইন ইন করতে সমস্যা হয়েছে।"
+          : "GitHub দিয়ে সাইন ইন করতে সমস্যা হয়েছে।",
+      );
 
       setSocialLoading(null);
     }
@@ -96,7 +106,6 @@ export default function SignInPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-3xl">🛒</span>
-
               <span className="text-xl font-bold">বাজার দর</span>
             </div>
 
@@ -124,7 +133,6 @@ export default function SignInPage() {
           {/* MOBILE LOGO */}
           <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
             <span className="text-2xl">🛒</span>
-
             <span className="text-xl font-bold text-[#202522]">বাজার দর</span>
           </div>
 
@@ -159,6 +167,7 @@ export default function SignInPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="আপনার email লিখুন"
                 autoComplete="email"
+                required
                 disabled={loading || socialLoading !== null}
                 className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
               />
@@ -181,6 +190,7 @@ export default function SignInPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="আপনার password লিখুন"
                   autoComplete="current-password"
+                  required
                   disabled={loading || socialLoading !== null}
                   className="h-12 w-full rounded-xl border border-[#dfe7e2] bg-white px-4 pr-12 text-sm text-[#202522] outline-none transition placeholder:text-[#a3aaa6] focus:border-[#008f4c] focus:ring-2 focus:ring-[#008f4c]/10 disabled:bg-[#f5f7f6]"
                 />
@@ -206,7 +216,6 @@ export default function SignInPage() {
               {loading ? (
                 <>
                   <span className="loading loading-spinner loading-sm" />
-
                   <span className="ml-2">সাইন ইন হচ্ছে...</span>
                 </>
               ) : (
@@ -218,9 +227,7 @@ export default function SignInPage() {
           {/* DIVIDER */}
           <div className="my-7 flex items-center gap-3">
             <div className="h-px flex-1 bg-[#e8edea]" />
-
             <span className="text-xs text-[#9aa19d]">অথবা</span>
-
             <div className="h-px flex-1 bg-[#e8edea]" />
           </div>
 
@@ -270,6 +277,16 @@ export default function SignInPage() {
               সাইন আপ করুন
             </Link>
           </p>
+
+          {/* HOME PAGE LINK */}
+          <div className="mt-5 border-t border-[#e8edea] pt-5 text-center">
+            <Link
+              href="/"
+              className="text-sm font-semibold text-[#008f4c] transition hover:underline"
+            >
+              ← হোম পেজে ফিরে যান
+            </Link>
+          </div>
         </div>
       </div>
     </main>
