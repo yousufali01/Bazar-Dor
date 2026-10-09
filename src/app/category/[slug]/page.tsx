@@ -8,7 +8,6 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://api.api-store.workers.dev/api/bazardor";
 
-  
 /* =========================================
    BANGLA NUMBER
    ========================================= */
@@ -117,11 +116,13 @@ export default function CategoryPage({
     if (!slug) return;
 
     async function loadProducts() {
-      try {
-        setLoading(true);
-        setError("");
+      setLoading(true);
+      setError("");
 
-        const response = await fetch(`${API_BASE_URL}/products`);
+      try {
+        const response = await fetch(`${API_BASE_URL}/products`, {
+          cache: "no-store",
+        });
 
         if (!response.ok) {
           throw new Error(`Products API failed: ${response.status}`);
@@ -129,10 +130,16 @@ export default function CategoryPage({
 
         const data: Product[] = await response.json();
 
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid products response");
+        }
+
         setProducts(data);
-      } catch (err) {
-        console.error(err);
-        setError("পণ্য লোড করতে সমস্যা হয়েছে।");
+      } catch {
+        setProducts([]);
+        setError(
+          "সার্ভার থেকে পণ্যের তথ্য আনা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।",
+        );
       } finally {
         setLoading(false);
       }
@@ -164,20 +171,16 @@ export default function CategoryPage({
         return result.sort((a, b) => b.today - a.today);
 
       case "name":
-        return result.sort((a, b) =>
-          a.nameBn.localeCompare(b.nameBn, "bn"),
-        );
+        return result.sort((a, b) => a.nameBn.localeCompare(b.nameBn, "bn"));
 
       case "change-high":
         return result.sort(
-          (a, b) =>
-            Math.abs(b.change.pct) - Math.abs(a.change.pct),
+          (a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct),
         );
 
       case "change-low":
         return result.sort(
-          (a, b) =>
-            Math.abs(a.change.pct) - Math.abs(b.change.pct),
+          (a, b) => Math.abs(a.change.pct) - Math.abs(b.change.pct),
         );
 
       default:
@@ -274,7 +277,6 @@ export default function CategoryPage({
      ========================================= */
 
   return (
-    
     <main className="min-h-screen bg-[#f7faf8]">
       <div className="mx-auto max-w-[1120px] px-4 py-8 sm:px-6 lg:px-8">
         {/* =========================================
@@ -500,4 +502,3 @@ export default function CategoryPage({
     </main>
   );
 }
-

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-
 import { authClient } from "@/lib/auth-client";
 
 export default function AuthButtons() {
@@ -15,17 +14,15 @@ export default function AuthButtons() {
   const [saving, setSaving] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  // Session loading
   if (isPending) {
     return (
-      <div className="flex items-center gap-2">
-        <div className="h-9 w-20 animate-pulse rounded-lg bg-gray-200" />
-        <div className="h-9 w-20 animate-pulse rounded-lg bg-gray-200" />
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="h-8 w-14 animate-pulse rounded-lg bg-gray-200 sm:h-9 sm:w-20" />
+        <div className="h-8 w-14 animate-pulse rounded-lg bg-gray-200 sm:h-9 sm:w-20" />
       </div>
     );
   }
 
-  // Logout
   async function handleLogout() {
     if (loggingOut || saving) return;
 
@@ -41,9 +38,7 @@ export default function AuthButtons() {
 
       setShowProfile(false);
       setShowEdit(false);
-
       toast.success("সফলভাবে Logout হয়েছে!");
-
       window.location.href = "/";
     } catch (error) {
       console.error("LOGOUT ERROR:", error);
@@ -53,14 +48,12 @@ export default function AuthButtons() {
     }
   }
 
-  // Open Edit Profile
   function openEditProfile() {
     setName(session?.user.name || "");
     setShowProfile(false);
     setShowEdit(true);
   }
 
-  // Update Profile Name
   async function handleUpdateName() {
     const trimmedName = name.trim();
 
@@ -89,7 +82,6 @@ export default function AuthButtons() {
       }
 
       toast.success("Profile name সফলভাবে update হয়েছে!");
-
       setShowEdit(false);
       setShowProfile(false);
     } catch (error) {
@@ -100,20 +92,19 @@ export default function AuthButtons() {
     }
   }
 
-  // Sign In / Sign Up
   if (!session?.user) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <Link
           href="/signin"
-          className="btn btn-sm border border-[#008f4c] bg-white text-[#008f4c] transition hover:bg-[#008f4c] hover:text-white"
+          className="btn btn-xs h-8 min-h-8 whitespace-nowrap border border-[#008f4c] bg-white px-2 text-[11px] text-[#008f4c] transition hover:bg-[#008f4c] hover:text-white sm:btn-sm sm:h-9 sm:min-h-9 sm:px-3 sm:text-sm"
         >
           সাইন ইন
         </Link>
 
         <Link
           href="/signup"
-          className="btn btn-sm border border-[#008f4c] bg-[#008f4c] text-white transition hover:bg-[#007a40]"
+          className="btn btn-xs h-8 min-h-8 whitespace-nowrap border border-[#008f4c] bg-[#008f4c] px-2 text-[11px] text-white transition hover:bg-[#007a40] sm:btn-sm sm:h-9 sm:min-h-9 sm:px-3 sm:text-sm"
         >
           সাইন আপ
         </Link>
@@ -127,39 +118,37 @@ export default function AuthButtons() {
 
   return (
     <>
-      {/* PROFILE BUTTON + DROPDOWN */}
       <div className="relative">
         <button
           type="button"
           onClick={() => setShowProfile((prev) => !prev)}
           aria-expanded={showProfile}
           aria-label="Open profile menu"
-          className="flex items-center gap-2 rounded-xl border border-[#e1e8e3] bg-white px-2 py-1.5 transition hover:border-[#008f4c]/30 hover:bg-[#f5faf7]"
+          className="flex max-w-full items-center gap-1.5 rounded-xl border border-[#e1e8e3] bg-white px-1.5 py-1.5 transition hover:border-[#008f4c]/30 hover:bg-[#f5faf7] sm:gap-2 sm:px-2"
         >
           {userImage ? (
             <img
               src={userImage}
               alt={userName}
-              className="h-9 w-9 rounded-full object-cover"
+              className="h-8 w-8 shrink-0 rounded-full object-cover sm:h-9 sm:w-9"
             />
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#008f4c] text-sm font-bold text-white">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#008f4c] text-sm font-bold text-white sm:h-9 sm:w-9">
               {userName.charAt(0).toUpperCase()}
             </div>
           )}
 
-          <div className="hidden text-left sm:block">
+          <div className="hidden min-w-0 text-left sm:block">
             <p className="max-w-[130px] truncate text-sm font-bold text-[#202522]">
               {userName}
             </p>
-
             <p className="max-w-[130px] truncate text-[11px] text-[#737a76]">
               {userEmail}
             </p>
           </div>
 
           <span
-            className={`text-xs text-[#737a76] transition-transform ${
+            className={`shrink-0 text-xs text-[#737a76] transition-transform ${
               showProfile ? "rotate-180" : ""
             }`}
           >
@@ -167,17 +156,15 @@ export default function AuthButtons() {
           </span>
         </button>
 
-        {/* PROFILE DROPDOWN */}
         {showProfile && (
-          <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-[280px] overflow-hidden rounded-2xl border border-[#e3e9e5] bg-white shadow-xl">
-            {/* User Information */}
+          <div className="absolute right-0 top-[calc(100%+10px)] z-[60] w-[min(280px,calc(100vw-24px))] overflow-hidden rounded-2xl border border-[#e3e9e5] bg-white shadow-xl">
             <div className="border-b border-[#edf1ee] bg-gradient-to-br from-[#f3fbf6] to-white p-4">
               <div className="flex items-center gap-3">
                 {userImage ? (
                   <img
                     src={userImage}
                     alt={userName}
-                    className="h-12 w-12 rounded-full border-2 border-white object-cover shadow-sm"
+                    className="h-12 w-12 shrink-0 rounded-full border-2 border-white object-cover shadow-sm"
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#008f4c] text-lg font-bold text-white shadow-sm">
@@ -189,11 +176,7 @@ export default function AuthButtons() {
                   <p className="truncate text-sm font-bold text-[#202522]">
                     {userName}
                   </p>
-
-                  <p className="truncate text-xs text-[#737a76]">
-                    {userEmail}
-                  </p>
-
+                  <p className="truncate text-xs text-[#737a76]">{userEmail}</p>
                   <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#008f4c]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#008f4c]" />
                     Active account
@@ -202,27 +185,23 @@ export default function AuthButtons() {
               </div>
             </div>
 
-            {/* Dropdown Actions */}
             <div className="space-y-1 p-2">
               <button
                 type="button"
                 onClick={openEditProfile}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#202522] transition hover:bg-[#f3f8f5]"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#eaf7ef] text-base">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#eaf7ef] text-base">
                   ✏️
                 </span>
-
-                <span className="flex-1">
+                <span className="min-w-0 flex-1">
                   <span className="block font-semibold">
                     প্রোফাইল Edit করুন
                   </span>
-
                   <span className="mt-0.5 block text-xs text-[#858d87]">
                     আপনার profile information
                   </span>
                 </span>
-
                 <span className="text-lg text-[#a0a7a2]">›</span>
               </button>
 
@@ -232,15 +211,13 @@ export default function AuthButtons() {
                 disabled={loggingOut}
                 className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-lg">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-lg">
                   ↪
                 </span>
-
-                <span className="flex-1">
+                <span className="min-w-0 flex-1">
                   <span className="block font-semibold">
                     {loggingOut ? "Logout হচ্ছে..." : "Sign Out"}
                   </span>
-
                   <span className="mt-0.5 block text-xs text-red-400">
                     আপনার account থেকে বের হন
                   </span>
@@ -251,10 +228,9 @@ export default function AuthButtons() {
         )}
       </div>
 
-      {/* EDIT PROFILE MODAL */}
       {showEdit && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#101b14]/50 px-4 py-6 backdrop-blur-[3px]"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-[#101b14]/50 px-3 py-4 backdrop-blur-[3px] sm:px-4 sm:py-6"
           onClick={() => {
             if (!saving && !loggingOut) setShowEdit(false);
           }}
@@ -263,27 +239,24 @@ export default function AuthButtons() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-profile-title"
-            className="my-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl"
+            className="my-auto max-h-[calc(100dvh-32px)] w-full max-w-md overflow-y-auto rounded-3xl border border-white/70 bg-white shadow-2xl sm:max-h-[calc(100dvh-48px)]"
             onClick={(event) => event.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-[#008f4c] to-[#006b39] px-6 pb-7 pt-6 sm:px-7">
+            <div className="relative overflow-hidden bg-gradient-to-br from-[#008f4c] to-[#006b39] px-5 pb-6 pt-5 sm:px-7 sm:pb-7 sm:pt-6">
               <div className="absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10" />
               <div className="absolute -bottom-16 right-16 h-32 w-32 rounded-full bg-white/10" />
 
               <div className="relative flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/15 text-2xl shadow-sm">
                     👤
                   </div>
-
                   <h2
                     id="edit-profile-title"
                     className="text-2xl font-bold tracking-tight text-white"
                   >
                     Edit Profile
                   </h2>
-
                   <p className="mt-1.5 text-sm text-white/80">
                     আপনার account information আপডেট করুন।
                   </p>
@@ -301,15 +274,13 @@ export default function AuthButtons() {
               </div>
             </div>
 
-            {/* Modal Body */}
-            <div className="p-6 sm:p-7">
-              {/* Profile Preview */}
+            <div className="p-4 sm:p-7">
               <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#e7eee9] bg-[#f7faf8] p-3">
                 {userImage ? (
                   <img
                     src={userImage}
                     alt={userName}
-                    className="h-12 w-12 rounded-full object-cover"
+                    className="h-12 w-12 shrink-0 rounded-full object-cover"
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#008f4c] text-lg font-bold text-white">
@@ -321,7 +292,6 @@ export default function AuthButtons() {
                   <p className="truncate text-sm font-bold text-[#202522]">
                     {userName}
                   </p>
-
                   <p className="mt-0.5 truncate text-xs text-[#737a76]">
                     {userEmail}
                   </p>
@@ -332,7 +302,6 @@ export default function AuthButtons() {
                 </span>
               </div>
 
-              {/* Email Field */}
               <div className="mb-5">
                 <label
                   htmlFor="profile-email"
@@ -345,7 +314,6 @@ export default function AuthButtons() {
                   <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-lg text-[#8a958e]">
                     ✉
                   </span>
-
                   <input
                     id="profile-email"
                     type="email"
@@ -357,13 +325,10 @@ export default function AuthButtons() {
 
                 <p className="mt-2 flex items-start gap-1.5 text-xs leading-relaxed text-[#929a94]">
                   <span>ⓘ</span>
-                  <span>
-                    Email address এখানে পরিবর্তন করা যাবে না।
-                  </span>
+                  <span>Email address এখানে পরিবর্তন করা যাবে না।</span>
                 </p>
               </div>
 
-              {/* Name Field */}
               <div>
                 <label
                   htmlFor="profile-name"
@@ -376,7 +341,6 @@ export default function AuthButtons() {
                   <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-lg text-[#8a958e]">
                     ♙
                   </span>
-
                   <input
                     id="profile-name"
                     type="text"
@@ -401,9 +365,7 @@ export default function AuthButtons() {
                 </p>
               </div>
 
-              {/* Action Buttons */}
               <div className="mt-8 space-y-3">
-                {/* Cancel + Save */}
                 <div className="flex flex-col-reverse gap-3 sm:flex-row">
                   <button
                     type="button"
@@ -434,7 +396,6 @@ export default function AuthButtons() {
                   </button>
                 </div>
 
-                {/* Sign Out inside Edit Profile */}
                 <button
                   type="button"
                   onClick={handleLogout}
@@ -455,7 +416,6 @@ export default function AuthButtons() {
                 </button>
               </div>
 
-              {/* Footer Note */}
               <p className="mt-5 text-center text-[11px] leading-relaxed text-[#a0a7a2]">
                 আপনার account-এর তথ্য নিরাপদে পরিচালনা করুন।
               </p>
@@ -466,4 +426,3 @@ export default function AuthButtons() {
     </>
   );
 }
-
