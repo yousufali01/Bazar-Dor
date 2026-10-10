@@ -2,7 +2,7 @@ import type { Category, Product } from "@/types";
 
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://api.api-store.workers.dev/api/bazardor"
+  "https://api.abcz.workers.dev/api/bazardor"
 ).replace(/\/+$/, "");
 
 async function fetchList<T>(endpoint: string): Promise<T[]> {
