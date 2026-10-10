@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -23,12 +23,14 @@ export default function SignInPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!email.trim()) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
       toast.error("Email দিন।");
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       toast.error("সঠিক Email address দিন।");
       return;
     }
@@ -42,7 +44,7 @@ export default function SignInPage() {
 
     try {
       const { error } = await authClient.signIn.email({
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         password,
       });
 
@@ -80,7 +82,7 @@ export default function SignInPage() {
         toast.error(
           provider === "google"
             ? "Google দিয়ে Sign In করা যায়নি।"
-            : "GitHub দিয়ে Sign In করা যায়নি।",
+            : "GitHub দিয়ে Sign In করা যায়নি.",
         );
 
         setSocialLoading(null);
@@ -110,7 +112,9 @@ export default function SignInPage() {
             </div>
 
             <div className="mt-10">
-              <p className="text-sm font-medium text-white/80">স্বাগতম আবার!</p>
+              <p className="text-sm font-medium text-white/80">
+                স্বাগতম আবার!
+              </p>
 
               <h2 className="mt-3 text-4xl font-bold leading-tight">
                 প্রতিদিনের বাজারের
@@ -119,8 +123,8 @@ export default function SignInPage() {
               </h2>
 
               <p className="mt-5 max-w-sm text-sm leading-6 text-white/75">
-                আপনার অ্যাকাউন্টে সাইন ইন করে সহজেই পণ্যের বর্তমান দাম ও বাজারের
-                তথ্য দেখুন।
+                আপনার অ্যাকাউন্টে সাইন ইন করে সহজেই পণ্যের বর্তমান দাম ও
+                বাজারের তথ্য দেখুন।
               </p>
             </div>
           </div>
@@ -129,11 +133,13 @@ export default function SignInPage() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="p-6 sm:p-9 lg:p-12">
+        <div className="min-w-0 p-6 sm:p-9 lg:p-12">
           {/* MOBILE LOGO */}
           <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
             <span className="text-2xl">🛒</span>
-            <span className="text-xl font-bold text-[#202522]">বাজার দর</span>
+            <span className="text-xl font-bold text-[#202522]">
+              বাজার দর
+            </span>
           </div>
 
           {/* HEADER */}
@@ -241,7 +247,7 @@ export default function SignInPage() {
             {socialLoading === "google" ? (
               <span className="loading loading-spinner loading-sm" />
             ) : (
-              <span className="text-lg font-bold">G</span>
+              <span className="text-[18px] font-bold">G</span>
             )}
 
             {socialLoading === "google"

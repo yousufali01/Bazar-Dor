@@ -42,9 +42,9 @@ export default function PriceTicker({ products }: PriceTickerProps) {
           return (
             <div
               key={`${product.id}-${index}`}
-              className="flex h-[30px] shrink-0 items-center gap-1.5 border-r border-[#e1e6e2] px-3 text-[9px] text-[#505752] sm:px-5 sm:text-[10px]"
+              className="flex h-[30px] shrink-0 items-center gap-1.5 border-r border-[#e1e6e2] px-3 text-[15px] text-[#505752] sm:px-5"
             >
-              <span className="shrink-0 text-[11px]">
+              <span className="shrink-0 text-[15px]">
                 {product.image || product.categoryIcon || "🛒"}
               </span>
 
@@ -57,7 +57,7 @@ export default function PriceTicker({ products }: PriceTickerProps) {
               </span>
 
               <span
-                className={`badge badge-ghost h-auto min-h-0 shrink-0 border-0 bg-transparent p-0 text-[9px] font-bold sm:text-[10px] ${
+                className={`badge badge-ghost h-auto min-h-0 shrink-0 border-0 bg-transparent p-0 text-[15px] font-bold ${
                   isDown ? "text-[#e74c3c]" : "text-[#079447]"
                 }`}
               >

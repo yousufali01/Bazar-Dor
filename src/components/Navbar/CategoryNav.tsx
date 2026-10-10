@@ -31,13 +31,13 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
                 aria-current={isActive ? "page" : undefined}
                 className={`btn btn-ghost btn-xs h-[28px] min-h-[28px] shrink-0 rounded-full px-2.5 font-medium normal-case transition-all duration-200 sm:px-3 ${
                   isActive
-                    ? "bg-[#e6f5ec] text-[#008f4c] hover:bg-[#e6f5ec] hover:text-[#008f4c]"
+                    ? "bg-[#008f4c] text-white hover:bg-[#008f4c] hover:text-white"
                     : "text-[#555d58] hover:bg-[#f2f5f3] hover:text-[#008f4c]"
                 }`}
               >
                 <span className="text-[11px]">{category.icon}</span>
 
-                <span className="whitespace-nowrap text-[10px] sm:text-[11px]">
+                <span className="whitespace-nowrap text-[15px]">
                   {category.nameBn}
                 </span>
               </Link>
