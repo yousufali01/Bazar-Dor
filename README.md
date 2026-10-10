@@ -187,6 +187,6 @@ No license has been specified yet. Add a `LICENSE` file if you intend to distrib
 
 **Project Name:** বাজার দর (BazarDor)
 
-**Built with:** Next.js, React, TypeScript, Tailwind CSS, and daisyUI
+**Built with:** Next.js, React, TypeScript, Tailwind CSS, MongoDb and daisyUI
 
 ⭐ If you find this project interesting, consider giving the repository a star!
